@@ -5,7 +5,7 @@ package com.example.artists.schedulers
  * @author Mikhail Avdeev (mvavdeev@sberbank.ru)
  */
 
-import rx.Scheduler
+import io.reactivex.rxjava3.core.Scheduler
 
 /**
  * Provider of schedulers for RxJava

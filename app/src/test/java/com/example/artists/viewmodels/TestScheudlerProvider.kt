@@ -1,8 +1,8 @@
 package com.example.artists.viewmodels
 
 import com.example.artists.schedulers.SchedulerProvider
-import rx.Scheduler
-import rx.schedulers.Schedulers
+import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * Provider of schedulers for RxJava in tests

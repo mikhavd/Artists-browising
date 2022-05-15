@@ -14,33 +14,41 @@ import com.example.rocketreserver.ArtistsQuery
  * TODO
  * @author Mikhail Avdeev (mvavdeev@sberbank.ru)
  */
-class ArtistsViewModel(
+class ArtistsViewModelRx3(
     private val schedulerProvider: SchedulerProvider,
 ) : ViewModel() {
 
-    //The internal obtained list for brochures to display
+    //The internal obtained list for artists to display
     private val _artists = MutableLiveData<List<Artist>>()
 
     // The external immutable LiveData for artists to display
     val artists: LiveData<List<Artist>> = _artists
+
+    //The internal obtained list for artists data
+    private val _artistsNodesList = MutableLiveData<List<ArtistsQuery.Node>>()
+
+    // The external immutable LiveDatafor artists data
+    val artistsNodesList: LiveData<List<ArtistsQuery.Node>> = _artistsNodesList
 
     init {
         loadInitialArtists()
     }
 
     private fun loadInitialArtists() {
-        Rx3Apollo.single(apolloClient.query(ArtistsQuery()))
-            .subscribeOn(schedulerProvider.io())
-            .observeOn(schedulerProvider.ui())
-            .subscribe(
-                { parseInitialArtistsResponse(it) },
-                { onFailure(it) }
-            )
+        apolloClient.query(ArtistsQuery()).run {
+            Rx3Apollo.single(this)
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe(
+                    { parseInitialArtistsResponse(it) },
+                    { onFailure(it) }
+                )
+        }
     }
 
     private fun parseInitialArtistsResponse(artistsResponse: ApolloResponse<ArtistsQuery.Data>) {
         Log.d(TAG, "Success ${artistsResponse.data}")
-        TODO("Not yet implemented")
+        artistsResponse.data?.search?.artists?.nodes?.filterNotNull()?.let { _artistsNodesList.postValue(it) }
     }
 
     private fun onFailure(throwable: Throwable) {
