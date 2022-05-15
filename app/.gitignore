@@ -45,3 +45,28 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+#built application files
+*.ap_
+*.aab
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+
+
+# Windows thumbnail db
+Thumbs.db
+
+
+.idea
+output.json
+
+#NDK
+obj/
