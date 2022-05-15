@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.example.artists"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Artists">
         <activity
-            android:name=".presentations.MainActivity"
+            android:name=".presentations.ArtistsListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentations.MainArtistsActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,5 +22,8 @@
             </intent-filter>
         </activity>
     </application>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

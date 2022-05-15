@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.apollographql.apollo3.api.ApolloResponse
 import com.apollographql.apollo3.rx3.Rx3Apollo
 import com.example.artists.networking.apolloClient
@@ -40,15 +41,18 @@ class ArtistsViewModelRx3(
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .subscribe(
-                    { parseInitialArtistsResponse(it) },
-                    { onFailure(it) }
+                    ::parseInitialArtistsResponse,
+                    ::onFailure
                 )
         }
     }
 
     private fun parseInitialArtistsResponse(artistsResponse: ApolloResponse<ArtistsQuery.Data>) {
         Log.d(TAG, "Success ${artistsResponse.data}")
-        artistsResponse.data?.search?.artists?.nodes?.filterNotNull()?.let { _artistsNodesList.postValue(it) }
+        artistsResponse.data?.search?.artists?.nodes?.filterNotNull()?.apply {
+            _artistsNodesList.postValue(this)
+            this.map { Artist(it.name) }.let(_artists::postValue)
+        }
     }
 
     private fun onFailure(throwable: Throwable) {
@@ -58,6 +62,16 @@ class ArtistsViewModelRx3(
             Log.d(TAG, "throwable = " + throwable.message)
         } catch (e: Throwable) {
             Log.d(TAG, "throwable = " + e.message)
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    class ArtistsViewModelFactory(
+        private val schedulerProvider: SchedulerProvider,
+    ) : ViewModelProvider.Factory {
+
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return ArtistsViewModelRx3(schedulerProvider) as T
         }
     }
 
