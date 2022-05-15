@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.apollographql.apollo:apollo-compiler:2.0.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.apollographql.apollo/apollo-compiler/2.0.0/a0f24f8787c31301f856092f986278aa87d3cf6c/apollo-compiler-2.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.apollographql.apollo/apollo-compiler/2.0.0/dac9236a67db43add90e61282fd8f5594af2e00b/apollo-compiler-2.0.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.apollographql.apollo/apollo-compiler/2.0.0/c86bb81946af5af164eca88c279d401224cad25c/apollo-compiler-2.0.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
