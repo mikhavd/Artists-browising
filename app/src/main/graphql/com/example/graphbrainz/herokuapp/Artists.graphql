@@ -1,0 +1,11 @@
+query Artists {
+    search {
+        artists(query: "John Myer", first: 10, after: null){
+            nodes {
+                id
+                name
+                disambiguation
+            }
+        }
+    }
+}

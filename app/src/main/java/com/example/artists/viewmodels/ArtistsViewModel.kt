@@ -4,16 +4,17 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.artists.listwithsearch.schedulers.SchedulerProvider
-import com.example.artists.networking.ArtistsApiService
-import com.example.artists.networking.pojos.ArtistsResponse
+import com.apollographql.apollo3.api.ApolloResponse
+import com.apollographql.apollo3.rx3.Rx3Apollo
+import com.example.artists.networking.apolloClient
+import com.example.artists.schedulers.SchedulerProvider
+import com.example.rocketreserver.ArtistsQuery
 
 /**
  * TODO
  * @author Mikhail Avdeev (mvavdeev@sberbank.ru)
  */
 class ArtistsViewModel(
-    private val artistsApiService: ArtistsApiService,
     private val schedulerProvider: SchedulerProvider,
 ) : ViewModel() {
 
@@ -28,16 +29,17 @@ class ArtistsViewModel(
     }
 
     private fun loadInitialArtists() {
-        artistsApiService.getArtistsList()
+        Rx3Apollo.single(apolloClient.query(ArtistsQuery()))
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
-            //todo .doOnSubscribe { _status.postValue(BrochuresApiStatus.LOADING) }
             .subscribe(
-                this::parseInitialArtistsResponse,
-                this::onFailure)
+                { parseInitialArtistsResponse(it) },
+                { onFailure(it) }
+            )
     }
 
-    private fun parseInitialArtistsResponse(artistsResponse: ArtistsResponse) {
+    private fun parseInitialArtistsResponse(artistsResponse: ApolloResponse<ArtistsQuery.Data>) {
+        Log.d(TAG, "Success ${artistsResponse.data}")
         TODO("Not yet implemented")
     }
 
