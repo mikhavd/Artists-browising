@@ -1,4 +1,4 @@
-package com.example.artists.listwithsearch
+package com.example.artists.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.LiveData

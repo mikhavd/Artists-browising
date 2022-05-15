@@ -1,6 +1,6 @@
-package com.example.artists.listwithsearch
+package com.example.artists.viewmodels
 
-import com.example.artists.listwithsearch.schedulers.SchedulerProvider
+import com.example.artists.schedulers.SchedulerProvider
 import rx.Scheduler
 import rx.schedulers.Schedulers
 

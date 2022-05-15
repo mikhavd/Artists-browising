@@ -1,4 +1,4 @@
-package com.example.artists.listwithsearch.schedulers
+package com.example.artists.schedulers
 
 /**
  * TODO

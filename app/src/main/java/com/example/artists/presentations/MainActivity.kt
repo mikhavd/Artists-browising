@@ -1,7 +1,8 @@
-package com.example.artists
+package com.example.artists.presentations
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.artists.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
