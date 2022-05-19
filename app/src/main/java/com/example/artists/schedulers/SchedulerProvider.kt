@@ -1,10 +1,5 @@
 package com.example.artists.schedulers
 
-/**
- * TODO
- * @author Mikhail Avdeev (mvavdeev@sberbank.ru)
- */
-
 import io.reactivex.rxjava3.core.Scheduler
 
 /**

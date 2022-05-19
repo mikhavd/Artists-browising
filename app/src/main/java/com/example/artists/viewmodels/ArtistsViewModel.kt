@@ -2,7 +2,6 @@ package com.example.artists.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -24,12 +23,6 @@ class ArtistsViewModel(
     private val schedulerProvider: SchedulerProvider,
 ) : ViewModel() {
 
-    //todo
-    private val _searchQuery = MutableLiveData(EMPTY_STRING)
-
-    // mediatorLiveData for binding searchQuery and artists list together
-    private val searchQueryMediatorData: MediatorLiveData<String> = MediatorLiveData<String>()
-
     private var currentSearchQuery = EMPTY_STRING
 
     //The internal obtained list for artists to display
@@ -38,15 +31,10 @@ class ArtistsViewModel(
     // The external immutable LiveData for artists to display
     val artists: LiveData<List<Artist>> = _artists
 
-    init {
-        //todo searchQueryMediatorData.addSource(_searchQuery, ::loadArtists)
-    }
 
     fun setQuery(originalInput: String) {
         val input = originalInput.toLowerCase(Locale.getDefault()).trim()
         if (input == currentSearchQuery) return
-        //todo nextPageHandler.reset()
-        //todo _searchQuery.postValue(input)
         currentSearchQuery = input.also { loadArtists(it, after = Optional.Present(null)) }
     }
 
@@ -62,11 +50,7 @@ class ArtistsViewModel(
         }
     }
 
-    private fun loadArtistsPaginated(searchQuery: String) {
-    }
-
     private fun parseArtistsResponse(artistsResponse: ApolloResponse<ArtistsByNameQuery.Data>) {
-        Log.d(TAG, "Success ${artistsResponse.data}")
         artistsResponse.data?.search?.artists?.nodes?.filterNotNull()?.apply {
             this.map { node ->
                 Artist(node.name)
@@ -78,8 +62,6 @@ class ArtistsViewModel(
 
     private fun onFailure(throwable: Throwable) {
         try {
-            //todo _status.postValue(BrochuresApiStatus.ERROR)
-            //todo _brochures.postValue(emptyList())
             Log.d(TAG, "throwable = " + throwable.message)
         } catch (e: Throwable) {
             Log.d(TAG, "throwable = " + e.message)
@@ -87,6 +69,7 @@ class ArtistsViewModel(
     }
 
     fun obtainMoreArtists() {
+        //todo
     }
 
     @Suppress("UNCHECKED_CAST")
