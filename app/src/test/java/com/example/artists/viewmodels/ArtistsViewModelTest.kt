@@ -55,25 +55,6 @@ class ArtistsViewModelTest {
     }
 
     @Test
-    fun parseTestResponse() {
-        mViewModel = ArtistsViewModel(testSchedulerProvider)
-        //todo viewModel.status.observeForever(statusObserver)
-        mViewModel.artistsNodesList.observeForever(artistsNodesListObserver)
-        mViewModel.artistsNodesList.observeForever { println("artistsData: $it") }
-        io.mockk.verify {
-            artistsNodesListObserver.onChanged(
-                listOf(
-                    ArtistsQuery.Node(
-                        id = "QXJ0aXN0OmMzODc5MDVlLWExODUtNDMwMC04ZmZmLTcxODM3ZDgzODhiNw==",
-                        name = "John Myer",
-                        disambiguation = null
-                    )
-                )
-            )
-        }
-    }
-
-    @Test
     fun getLoadingStatusForNonObtainedResponse() {
         mViewModel = ArtistsViewModel(testSchedulerProvider)
         //todo viewModel.status.observeForever(statusObserver)

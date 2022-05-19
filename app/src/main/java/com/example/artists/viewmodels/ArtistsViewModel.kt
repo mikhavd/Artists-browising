@@ -2,6 +2,7 @@ package com.example.artists.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -10,6 +11,7 @@ import com.apollographql.apollo3.rx3.Rx3Apollo
 import com.example.artists.networking.apolloClient
 import com.example.artists.schedulers.SchedulerProvider
 import com.example.rocketreserver.ArtistsQuery
+import java.util.Locale
 
 /**
  * TODO
@@ -19,39 +21,51 @@ class ArtistsViewModel(
     private val schedulerProvider: SchedulerProvider,
 ) : ViewModel() {
 
+    private val _searchQuery = MutableLiveData(EMPTY_STRING)
+
+    private var currentSearchQuery = EMPTY_STRING
+
     //The internal obtained list for artists to display
     private val _artists = MutableLiveData<List<Artist>>()
 
     // The external immutable LiveData for artists to display
     val artists: LiveData<List<Artist>> = _artists
 
-    //The internal obtained list for artists data
-    private val _artistsNodesList = MutableLiveData<List<ArtistsQuery.Node>>()
-
-    // The external immutable LiveDatafor artists data
-    val artistsNodesList: LiveData<List<ArtistsQuery.Node>> = _artistsNodesList
+    // mediatorLiveData for binding searchQuery and artists list together
+    private val searchQueryMediatorData: MediatorLiveData<String> = MediatorLiveData<String>()
 
     init {
-        loadInitialArtists()
+        //todo searchQueryMediatorData.addSource(_searchQuery, ::loadArtists)
     }
 
-    private fun loadInitialArtists() {
+    fun setQuery(originalInput: String) {
+        val input = originalInput.toLowerCase(Locale.getDefault()).trim()
+        if (input == currentSearchQuery) return
+        //todo nextPageHandler.reset()
+        //todo _searchQuery.postValue(input)
+        currentSearchQuery = input.also(::loadArtists)
+    }
+
+    private fun loadArtists(searchQuery: String) {
         apolloClient.query(ArtistsQuery()).run {
             Rx3Apollo.single(this)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .subscribe(
-                    ::parseInitialArtistsResponse,
+                    ::parseArtistsResponse,
                     ::onFailure
                 )
         }
     }
 
-    private fun parseInitialArtistsResponse(artistsResponse: ApolloResponse<ArtistsQuery.Data>) {
+    private fun parseArtistsResponse(artistsResponse: ApolloResponse<ArtistsQuery.Data>) {
         Log.d(TAG, "Success ${artistsResponse.data}")
         artistsResponse.data?.search?.artists?.nodes?.filterNotNull()?.apply {
-            _artistsNodesList.postValue(this)
-            this.map { Artist(it.name) }.let(_artists::postValue)
+            this.map { node ->
+                Artist(node.name)
+            }.let { list ->
+                _artists.postValue(list)
+            }
         }
     }
 
@@ -78,5 +92,6 @@ class ArtistsViewModel(
     companion object {
 
         private const val TAG = "Artists"
+        private val EMPTY_STRING: String = ""
     }
 }

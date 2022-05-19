@@ -10,9 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem"
-        app:drawableStartCompat="@android:drawable/btn_star"
-        app:drawableLeftCompat="@android:drawable/btn_star" />
+        android:textAppearance="?attr/textAppearanceListItem" />
 
     <TextView
         android:id="@+id/content"
