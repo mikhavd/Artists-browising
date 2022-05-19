@@ -15,7 +15,7 @@ import com.example.rocketreserver.ArtistsQuery
  * TODO
  * @author Mikhail Avdeev (mvavdeev@sberbank.ru)
  */
-class ArtistsViewModelRx3(
+class ArtistsViewModel(
     private val schedulerProvider: SchedulerProvider,
 ) : ViewModel() {
 
@@ -71,7 +71,7 @@ class ArtistsViewModelRx3(
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ArtistsViewModelRx3(schedulerProvider) as T
+            return ArtistsViewModel(schedulerProvider) as T
         }
     }
 

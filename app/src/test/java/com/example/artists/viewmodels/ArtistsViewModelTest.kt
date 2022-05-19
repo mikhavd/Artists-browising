@@ -15,10 +15,10 @@ import org.junit.Rule
 import org.junit.Test
 
 /**
- * Tests for [ArtistsViewModelRx3]
+ * Tests for [ArtistsViewModel]
  * @author Mikhail Avdeev (avdeev.m92@gmail.com)
  */
-class ArtistsViewModelRx3Test {
+class ArtistsViewModelTest {
 
     private val artistsNodesListObserver = mockk<Observer<List<ArtistsQuery.Node>>>(relaxed = true)
 
@@ -28,7 +28,7 @@ class ArtistsViewModelRx3Test {
 
     //todo private val statusObserver = mockk<Observer<ArtistsApiStatus>>(relaxed = true)
     private val artistsObserver = mockk<Observer<List<Artist>>>(relaxed = true)
-    private lateinit var viewModelRx3: ArtistsViewModelRx3
+    private lateinit var mViewModel: ArtistsViewModel
     private var loader: ClassLoader = ClassLoader.getSystemClassLoader()
     private val testSchedulerProvider = TestSchedulerProvider()
     //todo check if needed private val fullArtistsResponse = Files.lines(Paths.get(loader.getResource(FULL_SHELF_FILE_PATH).toURI())).parallel().collect(Collectors.joining()).run { //todo adapter.fromJson(this) }
@@ -56,10 +56,10 @@ class ArtistsViewModelRx3Test {
 
     @Test
     fun parseTestResponse() {
-        viewModelRx3 = ArtistsViewModelRx3(testSchedulerProvider)
+        mViewModel = ArtistsViewModel(testSchedulerProvider)
         //todo viewModel.status.observeForever(statusObserver)
-        viewModelRx3.artistsNodesList.observeForever(artistsNodesListObserver)
-        viewModelRx3.artistsNodesList.observeForever { println("artistsData: $it") }
+        mViewModel.artistsNodesList.observeForever(artistsNodesListObserver)
+        mViewModel.artistsNodesList.observeForever { println("artistsData: $it") }
         io.mockk.verify {
             artistsNodesListObserver.onChanged(
                 listOf(
@@ -75,32 +75,33 @@ class ArtistsViewModelRx3Test {
 
     @Test
     fun getLoadingStatusForNonObtainedResponse() {
-        viewModelRx3 = ArtistsViewModelRx3(testSchedulerProvider)
+        mViewModel = ArtistsViewModel(testSchedulerProvider)
         //todo viewModel.status.observeForever(statusObserver)
         //todo verify { statusObserver.onChanged(ArtistsApiStatus.LOADING) }
     }
 
     @Test
     fun parseEmptyResponse() {
-        viewModelRx3 = ArtistsViewModelRx3(testSchedulerProvider)
+        mViewModel = ArtistsViewModel(testSchedulerProvider)
         //todo viewModel.status.observeForever(statusObserver)
-        viewModelRx3.artists.observeForever(artistsObserver)
+        mViewModel.artists.observeForever(artistsObserver)
         //todo verify { statusObserver.onChanged(ArtistsApiStatus.DONE) }
-        viewModelRx3.artists.value
+        mViewModel.artists.value
     }
 
     @Test
     fun parseSingleArtist() {
         //todo
-        viewModelRx3 = ArtistsViewModelRx3(testSchedulerProvider)
+        mViewModel = ArtistsViewModel(testSchedulerProvider)
         //todo viewModel.status.observeForever(statusObserver)
-        viewModelRx3.artists.observeForever(artistsObserver)
+        mViewModel.artists.observeForever(artistsObserver)
         //todo verify { statusObserver.onChanged(ArtistsApiStatus.DONE) }
-        viewModelRx3.artists.value?.let { list ->
+        mViewModel.artists.value?.let { list ->
             val expectedArtist = Artist(
-                id = "id",
+                //todo id = "id",
                 name = "name",
-                disambiguation = null)
+                //todo  disambiguation = null
+            )
             val actualArtist = list[0]
             assertEquals(expectedArtist, actualArtist)
         } ?: Assert.fail("Should not have thrown any exception")

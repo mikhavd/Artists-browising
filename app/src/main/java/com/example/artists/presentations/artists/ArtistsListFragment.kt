@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.artists.R
 import com.example.artists.schedulers.AppSchedulerProvider
 import com.example.artists.viewmodels.Artist
-import com.example.artists.viewmodels.ArtistsViewModelRx3
+import com.example.artists.viewmodels.ArtistsViewModel
 
 /**
  * A fragment representing a list of Items.
@@ -20,8 +20,8 @@ import com.example.artists.viewmodels.ArtistsViewModelRx3
  */
 class ArtistsListFragment : Fragment() {
 
-    private val viewModel: ArtistsViewModelRx3 by viewModels {
-        ArtistsViewModelRx3.ArtistsViewModelFactory(
+    private val mViewModel: ArtistsViewModel by viewModels {
+        ArtistsViewModel.ArtistsViewModelFactory(
             AppSchedulerProvider()
         )
     }
@@ -43,7 +43,7 @@ class ArtistsListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.artists.observe(viewLifecycleOwner, ::createArtistsAdapter)
+        mViewModel.artists.observe(viewLifecycleOwner, ::createArtistsAdapter)
     }
 
     private fun createArtistsAdapter(list: List<Artist>) {
