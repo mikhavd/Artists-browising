@@ -1,4 +1,4 @@
-package com.example.artists.presentations
+package com.example.artists.presentations.artists
 
 import android.os.Bundle
 import android.util.Log

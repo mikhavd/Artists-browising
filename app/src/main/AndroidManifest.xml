@@ -13,7 +13,7 @@
             android:name=".presentations.ArtistsListActivity"
             android:exported="false" />
         <activity
-            android:name=".presentations.MainArtistsActivity"
+            android:name=".presentations.artists.MainArtistsActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
