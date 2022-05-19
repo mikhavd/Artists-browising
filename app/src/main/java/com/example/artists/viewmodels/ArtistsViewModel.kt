@@ -10,18 +10,24 @@ import com.apollographql.apollo3.api.ApolloResponse
 import com.apollographql.apollo3.rx3.Rx3Apollo
 import com.example.artists.networking.apolloClient
 import com.example.artists.schedulers.SchedulerProvider
-import com.example.rocketreserver.ArtistsQuery
+import com.example.rocketreserver.ArtistsByNameQuery
 import java.util.Locale
 
 /**
- * TODO
+ * ViewModel for a [ArtistsListFragment];
+ * Providing list of artists corresponding to the search query
+ *
  * @author Mikhail Avdeev (mvavdeev@sberbank.ru)
  */
 class ArtistsViewModel(
     private val schedulerProvider: SchedulerProvider,
 ) : ViewModel() {
 
+    //todo
     private val _searchQuery = MutableLiveData(EMPTY_STRING)
+
+    // mediatorLiveData for binding searchQuery and artists list together
+    private val searchQueryMediatorData: MediatorLiveData<String> = MediatorLiveData<String>()
 
     private var currentSearchQuery = EMPTY_STRING
 
@@ -30,9 +36,6 @@ class ArtistsViewModel(
 
     // The external immutable LiveData for artists to display
     val artists: LiveData<List<Artist>> = _artists
-
-    // mediatorLiveData for binding searchQuery and artists list together
-    private val searchQueryMediatorData: MediatorLiveData<String> = MediatorLiveData<String>()
 
     init {
         //todo searchQueryMediatorData.addSource(_searchQuery, ::loadArtists)
@@ -47,7 +50,7 @@ class ArtistsViewModel(
     }
 
     private fun loadArtists(searchQuery: String) {
-        apolloClient.query(ArtistsQuery()).run {
+        apolloClient.query(ArtistsByNameQuery(searchQuery, DEFAULT_LIMIT)).run {
             Rx3Apollo.single(this)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
@@ -58,7 +61,7 @@ class ArtistsViewModel(
         }
     }
 
-    private fun parseArtistsResponse(artistsResponse: ApolloResponse<ArtistsQuery.Data>) {
+    private fun parseArtistsResponse(artistsResponse: ApolloResponse<ArtistsByNameQuery.Data>) {
         Log.d(TAG, "Success ${artistsResponse.data}")
         artistsResponse.data?.search?.artists?.nodes?.filterNotNull()?.apply {
             this.map { node ->
@@ -93,5 +96,6 @@ class ArtistsViewModel(
 
         private const val TAG = "Artists"
         private val EMPTY_STRING: String = ""
+        private const val DEFAULT_LIMIT: Int = 15
     }
 }

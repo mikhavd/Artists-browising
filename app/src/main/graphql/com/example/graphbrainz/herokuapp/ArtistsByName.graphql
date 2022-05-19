@@ -1,6 +1,6 @@
-query DefaultArtist {
+query ArtistsByName($artistName: String!, $limit: Int!) {
     search {
-        artists(query: "John Myer", first: 10, after: null){
+        artists(query: $artistName, first: $limit, after: null){
             nodes {
                 id
                 name
