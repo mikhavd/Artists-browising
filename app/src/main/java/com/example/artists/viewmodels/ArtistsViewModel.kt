@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.apollographql.apollo3.api.ApolloResponse
+import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.rx3.Rx3Apollo
 import com.example.artists.networking.apolloClient
 import com.example.artists.schedulers.SchedulerProvider
@@ -46,11 +47,11 @@ class ArtistsViewModel(
         if (input == currentSearchQuery) return
         //todo nextPageHandler.reset()
         //todo _searchQuery.postValue(input)
-        currentSearchQuery = input.also(::loadArtists)
+        currentSearchQuery = input.also { loadArtists(it, after = Optional.Present(null)) }
     }
 
-    private fun loadArtists(searchQuery: String) {
-        apolloClient.query(ArtistsByNameQuery(searchQuery, DEFAULT_LIMIT)).run {
+    private fun loadArtists(searchQuery: String, limit: Int = DEFAULT_LIMIT, after: Optional<String?> ) {
+        apolloClient.query(ArtistsByNameQuery(searchQuery, limit, after)).run {
             Rx3Apollo.single(this)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
@@ -59,6 +60,9 @@ class ArtistsViewModel(
                     ::onFailure
                 )
         }
+    }
+
+    private fun loadArtistsPaginated(searchQuery: String) {
     }
 
     private fun parseArtistsResponse(artistsResponse: ApolloResponse<ArtistsByNameQuery.Data>) {
@@ -80,6 +84,9 @@ class ArtistsViewModel(
         } catch (e: Throwable) {
             Log.d(TAG, "throwable = " + e.message)
         }
+    }
+
+    fun obtainMoreArtists() {
     }
 
     @Suppress("UNCHECKED_CAST")

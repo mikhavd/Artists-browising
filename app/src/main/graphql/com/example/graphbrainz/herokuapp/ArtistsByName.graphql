@@ -1,6 +1,6 @@
-query ArtistsByName($artistName: String!, $limit: Int!) {
+query ArtistsByName($artistName: String!, $limit: Int!, $after: String) {
     search {
-        artists(query: $artistName, first: $limit, after: null){
+        artists(query: $artistName, first: $limit, after: $after){
             nodes {
                 id
                 name

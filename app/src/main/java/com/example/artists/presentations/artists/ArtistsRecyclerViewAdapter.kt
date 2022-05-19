@@ -11,21 +11,26 @@ import com.example.artists.viewmodels.Artist
  * [RecyclerView.Adapter] that can display a [Artist].
  */
 class ArtistsRecyclerViewAdapter(
-    private val values: List<Artist>,
+    private val artists: List<Artist>,
 ) : RecyclerView.Adapter<ArtistsRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
         return ViewHolder(FragmentItemArtistBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
+    var onEndOfListReached: (() -> Unit)? = null
+
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
+
+        val item = artists[position]
         holder.idView.text = position.toString()
         holder.contentView.text = item.name
+        if (position == artists.size - 1) {
+            onEndOfListReached?.invoke()
+        }
     }
 
-    override fun getItemCount(): Int = values.size
+    override fun getItemCount(): Int = artists.size
 
     inner class ViewHolder(binding: FragmentItemArtistBinding) : RecyclerView.ViewHolder(binding.root) {
         val idView: TextView = binding.itemNumber

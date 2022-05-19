@@ -58,6 +58,9 @@ class ArtistsListFragment : Fragment() {
 
     private fun createArtistsAdapter(list: List<Artist>) {
         artistsRecyclerView.adapter = ArtistsRecyclerViewAdapter(list)
+        (artistsRecyclerView.adapter as ArtistsRecyclerViewAdapter).onEndOfListReached = {
+            artistsViewModel.obtainMoreArtists()
+        }
     }
 
     private fun initSearchInputListener() {
